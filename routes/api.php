@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CarouselItemsController; // Import controller
 use App\Http\Controllers\Api\UserController; // Import Controller
+use App\Http\Controllers\Api\PromptController; // Import Controller
 use Illuminate\Facades\Hash; // Import Hash
 
 /*
@@ -42,3 +43,10 @@ Route::post('/user', [UserController::class, 'store'])->name('user.store'); // C
 Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update'); // Update Name
 Route::put('/user/email/{id}', [UserController::class, 'email'])->name('user.email'); // Update email
 Route::put('/user/password/{id}', [UserController::class, 'password'])->name('user.password'); // Update password
+
+// Prompt
+Route::get('/prompt', [PromptController::class, 'index']); // Read
+Route::get('/prompt/{id}', [PromptController::class, 'show']); // Read
+Route::put('/prompt/{id}', [PromptController::class, 'update']); // Update Name
+Route::delete('/prompt/{id}', [PromptController::class, 'destroy']); // Delete
+Route::post('/prompt', [PromptController::class, 'store']); // Create
