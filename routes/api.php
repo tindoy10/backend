@@ -19,40 +19,39 @@ use Illuminate\Facades\Hash; // Import Hash
 |
 */
 
-Route::controller(AuthController::class)->group(function () {
-    Route::post('/login', 'login')->name('user.login');
-    Route::post('/logout', 'logout');
-});
+// Public APIs
+Route::post('/login', [AuthController::class, 'login'])->name('user.login');
+Route::post('/user',  [UserController::class, 'store'])->name('user.store'); 
 
-Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
-    return $request->user();
-});
+// Private APIs
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
 
-// Carousel
-Route::controller(CarouselItemsController::class)->group(function () {
-    Route::get('/carousel', 'index'); // Read
-    Route::get('/carousel/{id}', 'show'); // Read
-    Route::post('/carousel', 'store'); // Create
-    Route::put('/carousel/{id}', 'update'); // Update
-    Route::delete('/carousel/{id}', 'destroy'); // Delete
-});
+    // Carousel
+    Route::controller(CarouselItemsController::class)->group(function () {
+        Route::get('/carousel',             'index'); 
+        Route::get('/carousel/{id}',        'show'); 
+        Route::post('/carousel',            'store'); 
+        Route::put('/carousel/{id}',        'update'); 
+        Route::delete('/carousel/{id}',     'destroy');
+    });
 
-// User
-Route::controller(UserController::class)->group(function () {
-    Route::get('/user', 'index'); // Read
-    Route::get('/user/{id}', 'show'); // Read
-    Route::delete('/user/{id}', 'destroy'); // Delete
-    Route::post('/user', 'store')->name('user.store'); // Create
-    Route::put('/user/{id}', 'update')->name('user.update'); // Update Name
-    Route::put('/user/email/{id}', 'email')->name('user.email'); // Update email
-    Route::put('/user/password/{id}', 'password')->name('user.password'); // Update password
+    // User
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/user',                 'index');
+        Route::get('/user/{id}',            'show');
+        Route::delete('/user/{id}',         'destroy'); 
+        Route::put('/user/{id}',            'update')->name('user.update'); 
+        Route::put('/user/email/{id}',      'email')->name('user.email'); 
+        Route::put('/user/password/{id}',   'password')->name('user.password'); 
+    });
 });
 
 // Prompt
 Route::controller(PromptController::class)->group(function () {
-    Route::get('/prompt', 'index'); // Read
-    Route::get('/prompt/{id}', 'show'); // Read
-    Route::put('/prompt/{id}', 'update'); // Update Name
-    Route::delete('/prompt/{id}', 'destroy'); // Delete
-    Route::post('/prompt', 'store'); // Create
+    Route::get('/prompt',           'index');
+    Route::get('/prompt/{id}',      'show'); 
+    Route::put('/prompt/{id}',      'update');
+    Route::delete('/prompt/{id}',   'destroy'); 
+    Route::post('/prompt',          'store'); 
 });

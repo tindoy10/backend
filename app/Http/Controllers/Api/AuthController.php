@@ -7,6 +7,7 @@ use App\Http\Requests\UserRequest; // Import request
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -17,7 +18,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) { // Compare
+        if (!$user || !Hash::check($request->password, $user->password)) { // Guard Clause Technique. Compare
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -32,10 +33,16 @@ class AuthController extends Controller
     }
 
     /**
-     * Login using the specified resource.
+     * Logout using the specified resource.
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        return false;
+        $request->user()->tokens()->delete();
+
+        $response = [
+            'message' => 'Logout',
+        ];
+
+        return $response;
     }
 }
