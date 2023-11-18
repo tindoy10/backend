@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CarouselItemsController; // Import controller
@@ -18,35 +19,40 @@ use Illuminate\Facades\Hash; // Import Hash
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/login', 'login')->name('user.login');
+    Route::post('/logout', 'logout');
+});
+
+Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
     return $request->user();
 });
 
 // Carousel
-
-Route::get('/carousel', [CarouselItemsController::class, 'index']); // Read
-Route::get('/carousel/{id}', [CarouselItemsController::class, 'show']); // Read
-
-Route::post('/carousel', [CarouselItemsController::class, 'store']); // Create
-Route::put('/carousel/{id}', [CarouselItemsController::class, 'update']); // Update
-
-Route::delete('/carousel/{id}', [CarouselItemsController::class, 'destroy']); // Delete
+Route::controller(CarouselItemsController::class)->group(function () {
+    Route::get('/carousel', 'index'); // Read
+    Route::get('/carousel/{id}', 'show'); // Read
+    Route::post('/carousel', 'store'); // Create
+    Route::put('/carousel/{id}', 'update'); // Update
+    Route::delete('/carousel/{id}', 'destroy'); // Delete
+});
 
 // User
-Route::get('/user', [UserController::class, 'index']); // Read
-Route::get('/user/{id}', [UserController::class, 'show']); // Read
-
-Route::delete('/user/{id}', [UserController::class, 'destroy']); // Delete
-
-Route::post('/user', [UserController::class, 'store'])->name('user.store'); // Create
-
-Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update'); // Update Name
-Route::put('/user/email/{id}', [UserController::class, 'email'])->name('user.email'); // Update email
-Route::put('/user/password/{id}', [UserController::class, 'password'])->name('user.password'); // Update password
+Route::controller(UserController::class)->group(function () {
+    Route::get('/user', 'index'); // Read
+    Route::get('/user/{id}', 'show'); // Read
+    Route::delete('/user/{id}', 'destroy'); // Delete
+    Route::post('/user', 'store')->name('user.store'); // Create
+    Route::put('/user/{id}', 'update')->name('user.update'); // Update Name
+    Route::put('/user/email/{id}', 'email')->name('user.email'); // Update email
+    Route::put('/user/password/{id}', 'password')->name('user.password'); // Update password
+});
 
 // Prompt
-Route::get('/prompt', [PromptController::class, 'index']); // Read
-Route::get('/prompt/{id}', [PromptController::class, 'show']); // Read
-Route::put('/prompt/{id}', [PromptController::class, 'update']); // Update Name
-Route::delete('/prompt/{id}', [PromptController::class, 'destroy']); // Delete
-Route::post('/prompt', [PromptController::class, 'store']); // Create
+Route::controller(PromptController::class)->group(function () {
+    Route::get('/prompt', 'index'); // Read
+    Route::get('/prompt/{id}', 'show'); // Read
+    Route::put('/prompt/{id}', 'update'); // Update Name
+    Route::delete('/prompt/{id}', 'destroy'); // Delete
+    Route::post('/prompt', 'store'); // Create
+});
