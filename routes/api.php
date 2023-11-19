@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CarouselItemsController; // Import controller
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController; // Import Controller
 use App\Http\Controllers\Api\PromptController; // Import Controller
 use Illuminate\Facades\Hash; // Import Hash
@@ -27,6 +28,8 @@ Route::post('/user',  [UserController::class, 'store'])->name('user.store');
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    // Admin APIs
+
     // Carousel
     Route::controller(CarouselItemsController::class)->group(function () {
         Route::get('/carousel',             'index'); 
@@ -43,8 +46,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/user/{id}',         'destroy'); 
         Route::put('/user/{id}',            'update')->name('user.update'); 
         Route::put('/user/email/{id}',      'email')->name('user.email'); 
-        Route::put('/user/password/{id}',   'password')->name('user.password'); 
+        Route::put('/user/password/{id}',   'password')->name('user.password');
+        Route::put('/user/image/{id}',      'image')->name('user.image'); 
     });
+
+    // User Specific APIs (Based on Token of User)
+    Route::get('/profile/show',             [ProfileController::class, 'show']);
+    Route::put('/profile/image',            [ProfileController::class, 'image'])->name('profile.image');
 });
 
 // Prompt
