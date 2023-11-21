@@ -26,3 +26,5 @@ return new class extends Migration
         });
     }
 };
+
+// php artisan make:migration add_image_column_in_users_table - Add column in a table
